@@ -18,6 +18,8 @@ cookie_agreement.click()
 search_field = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="input-field"]')))
 search_field.send_keys("Python")
 
+search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(),"Szukaj")]')))
+search_button.click()
 
 time.sleep(300)
 driver.quit()
