@@ -11,13 +11,15 @@ wait_long = WebDriverWait(driver, 10)
 
 driver.get("https://www.pracuj.pl/")
 
+search_phrase = "Python"
+
 driver.maximize_window()
 
 cookie_agreement = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="button-submitCookie"]')))
 cookie_agreement.click()
 
 search_field = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="input-field"]')))
-search_field.send_keys("Python")
+search_field.send_keys("search_phrase")
 
 search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(),"Szukaj")]')))
 search_button.click()
