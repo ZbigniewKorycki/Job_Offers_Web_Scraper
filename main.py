@@ -42,7 +42,7 @@ company_name = []
 position_name = []
 link_to_offer = []
 localisation = []
-contact_type = []
+contract_type = []
 work_schedule = []
 experience_level = []
 type_of_work = []
@@ -129,20 +129,19 @@ for job_offer in offer_to_scrape:
     except NoSuchElementException:
         optional_section_element = None
 
-
-    print(company_name_element)
-    print(position_name_element)
-    print(job_offer)
-    print(localisation_element)
-    print(contract_type_element)
-    print(work_schedule_element)
-    print(experience_level_element)
-    print(type_of_work_element)
-    print(required_technologies_element)
-    print(optional_technologies_element)
-    print(responsibilities_section_element)
-    print(requirements_section_element)
-    print(optional_section_element)
+    company_name.append(company_name_element)
+    position_name.append(position_name_element)
+    link_to_offer.append(job_offer)
+    localisation.append(localisation_element)
+    contract_type.append(contract_type_element)
+    work_schedule.append(work_schedule_element)
+    experience_level.append(experience_level_element)
+    type_of_work.append(type_of_work_element)
+    required_technologies.append(required_technologies_element)
+    optional_technologies.append(optional_technologies_element)
+    responsibilities_section.append(responsibilities_section_element)
+    requirements_section.append(requirements_section_element)
+    optional_section.append(optional_section_element)
 
 
 data = pd.DataFrame(
@@ -151,7 +150,7 @@ data = pd.DataFrame(
         "position_name": position_name,
         "link_to_offer": link_to_offer,
         "localisation": localisation,
-        "contact_type": contact_type,
+        "contract_type": contract_type,
         "work_schedule": work_schedule,
         "experience_level": experience_level,
         "type_of_work": type_of_work,
