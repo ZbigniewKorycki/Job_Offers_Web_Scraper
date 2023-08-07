@@ -26,17 +26,21 @@ search_field.send_keys(search_phrase)
 search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(),"Szukaj")]')))
 search_button.click()
 
-multiple_localisation = wait_long.until(EC.presence_of_all_elements_located((By.XPATH, '//div[@data-test-location="multiple"]')))
 
-for offer_with_multiple_localisation in multiple_localisation:
-    offer_with_multiple_localisation.click()
+max_number_of_page = int(driver.find_element(By.CSS_SELECTOR, 'span[data-test="top-pagination-max-page-number"]').text)
 
-offers_current_page = wait_long.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-test="link-offer"]')))
-links = [offer.get_attribute("href") for offer in offers_current_page]
-print(links)
+all_offers_links = []
+for page in range(1, max_number_of_page + 1):
+    button_element = driver.find_element(By.CSS_SELECTOR, f'button[data-test="bottom-pagination-button-page-{page}"]')
+    button_element.click()
+    multiple_localisation = wait_long.until(EC.presence_of_all_elements_located((By.XPATH,
+                                                                                 '//div[@data-test-location="multiple"]')))
+    for offer_with_multiple_localisation in multiple_localisation:
+        offer_with_multiple_localisation.click()
+    offers_current_page = wait_long.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-test="link-offer"]')))
+    links_from_current_page = [offer.get_attribute("href") for offer in offers_current_page]
+    all_offers_links.extend(links_from_current_page)
 
-
-offer_to_scrape = ["https://www.pracuj.pl/praca/programista-w-dziale-rnd-wroclaw-kazimierza-witalisa-szarskiego-3,oferta,1002772799?s=499ee8a1&searchId=MTY5MTQxNDAwMjU4NC42MDg2"]
 
 company_name = []
 position_name = []
@@ -53,7 +57,7 @@ requirements_section = []
 optional_section = []
 
 
-for job_offer in links[0:5]:
+for job_offer in all_offers_links[0:5]:
     driver.get(job_offer)
     time.sleep(5)
     try:
