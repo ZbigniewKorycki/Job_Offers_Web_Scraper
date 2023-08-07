@@ -13,7 +13,7 @@ wait_long = WebDriverWait(driver, 10)
 
 driver.get("https://www.pracuj.pl/")
 
-search_phrase = "Python"
+search_phrase = "Hubspot"
 
 driver.maximize_window()
 
@@ -26,17 +26,22 @@ search_field.send_keys(search_phrase)
 search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(),"Szukaj")]')))
 search_button.click()
 
-
-max_number_of_page = int(driver.find_element(By.CSS_SELECTOR, 'span[data-test="top-pagination-max-page-number"]').text)
+try:
+    max_number_of_page = int(driver.find_element(By.CSS_SELECTOR, 'span[data-test="top-pagination-max-page-number"]').text)
+except NoSuchElementException:
+    max_number_of_page = 1
 
 all_offers_links = []
 for page in range(1, max_number_of_page + 1):
-    button_element = driver.find_element(By.CSS_SELECTOR, f'button[data-test="bottom-pagination-button-page-{page}"]')
-    button_element.click()
-    multiple_localisation = wait_long.until(EC.presence_of_all_elements_located((By.XPATH,
+    try:
+        button_element = driver.find_element(By.CSS_SELECTOR, f'button[data-test="bottom-pagination-button-page-{page}"]')
+        button_element.click()
+    except NoSuchElementException:
+        print('Only 1 page')
+    multiple_location = wait_long.until(EC.presence_of_all_elements_located((By.XPATH,
                                                                                  '//div[@data-test-location="multiple"]')))
-    for offer_with_multiple_localisation in multiple_localisation:
-        offer_with_multiple_localisation.click()
+    for offer_with_multiple_location in multiple_location:
+        offer_with_multiple_location.click()
     offers_current_page = wait_long.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-test="link-offer"]')))
     links_from_current_page = [offer.get_attribute("href") for offer in offers_current_page]
     all_offers_links.extend(links_from_current_page)
@@ -45,7 +50,7 @@ for page in range(1, max_number_of_page + 1):
 company_name = []
 position_name = []
 link_to_offer = []
-localisation = []
+location = []
 contract_type = []
 work_schedule = []
 experience_level = []
@@ -57,9 +62,9 @@ requirements_section = []
 optional_section = []
 
 
-for job_offer in all_offers_links[0:5]:
+for job_offer in all_offers_links:
     driver.get(job_offer)
-    time.sleep(5)
+    time.sleep(2)
     try:
         company_name_element = driver.find_element(By.CSS_SELECTOR,
                                                'h2[data-test="text-employerName"]').text.replace("O firmie", "")
@@ -74,11 +79,11 @@ for job_offer in all_offers_links[0:5]:
         position_name_element = None
 
     try:
-        localisation_element = driver.find_element(By.CSS_SELECTOR,
+        location_element = driver.find_element(By.CSS_SELECTOR,
                                                 'div[data-test="sections-benefit-workplaces"]').text.replace("Siedziba firmy", "")
-        localisation_element = localisation_element.replace("Company location", "")
+        location_element = location_element.replace("Company location", "")
     except NoSuchElementException:
-        localisation_element = None
+        location_element = None
 
     try:
         contract_type_element = driver.find_element(By.CSS_SELECTOR,
@@ -141,7 +146,7 @@ for job_offer in all_offers_links[0:5]:
     company_name.append(company_name_element)
     position_name.append(position_name_element)
     link_to_offer.append(job_offer)
-    localisation.append(localisation_element)
+    location.append(location_element)
     contract_type.append(contract_type_element)
     work_schedule.append(work_schedule_element)
     experience_level.append(experience_level_element)
@@ -158,7 +163,7 @@ data = pd.DataFrame(
         "company_name": company_name,
         "position_name": position_name,
         "link_to_offer": link_to_offer,
-        "localisation": localisation,
+        "location": location,
         "contract_type": contract_type,
         "work_schedule": work_schedule,
         "experience_level": experience_level,
