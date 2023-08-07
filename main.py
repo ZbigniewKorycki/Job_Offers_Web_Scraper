@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -42,40 +43,123 @@ position_name = []
 link_to_offer = []
 localisation = []
 contact_type = []
+work_schedule = []
 experience_level = []
 type_of_work = []
-requirements = []
-good_to_have = []
+required_technologies = []
+optional_technologies = []
+responsibilities_section = []
+requirements_section = []
+optional_section = []
 
 
 
 for job_offer in offer_to_scrape:
     driver.get(job_offer)
-    employer_name_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                                       'h2[data-test="text-employerName"]')))
-    employer = employer_name_element.text.replace("O firmie", "")
-    position_name_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                                       'h1[data-test="text-positionName"]')))
+    time.sleep(5)
+    try:
+        company_name_element = driver.find_element(By.CSS_SELECTOR,
+                                               'h2[data-test="text-employerName"]').text.replace("O firmie", "")
+    except NoSuchElementException:
+        company_name_element = None
 
-    position = position_name_element.text
-    print(employer)
-    print(position)
+    try:
+        position_name_element = driver.find_element(By.CSS_SELECTOR,
+                                            'h1[data-test="text-positionName"]').text
+    except NoSuchElementException:
+        position_name_element = None
+
+    try:
+        localisation_element = driver.find_element(By.CSS_SELECTOR,
+                                                'div[data-test="sections-benefit-workplaces"]').text
+    except NoSuchElementException:
+        localisation_element = None
+
+    try:
+        contract_type_element = driver.find_element(By.CSS_SELECTOR,
+                                                'div[data-test="sections-benefit-contracts-text"]').text
+    except NoSuchElementException:
+        contract_type_element = None
+
+    try:
+        work_schedule_element = driver.find_element(By.CSS_SELECTOR,
+                                                'div[data-test="sections-benefit-work-schedule-text"]').text
+    except NoSuchElementException:
+        work_schedule_element = None
+
+    try:
+        experience_level_element = driver.find_element(By.CSS_SELECTOR,
+                                                   'div[data-test="sections-benefit-employment-type-name-text"]').text
+    except NoSuchElementException:
+        experience_level_element = None
+
+    try:
+        type_of_work_element = driver.find_element(By.CSS_SELECTOR,
+                                                'div[data-test="sections-benefit-work-modes-text"]').text
+    except NoSuchElementException:
+        type_of_work_element = None
+
+    try:
+        required_technologies_element = driver.find_element(By.CSS_SELECTOR,
+                                               'div[data-test="section-technologies-expected"]').text
+    except NoSuchElementException:
+        required_technologies_element = None
+
+    try:
+        optional_technologies_element = driver.find_element(By.CSS_SELECTOR,
+                                                        'div[data-test="section-technologies-optional"]').text
+    except NoSuchElementException:
+        optional_technologies_element = None
+
+    try:
+        responsibilities_section_element = driver.find_element(By.CSS_SELECTOR,
+                                               'div[data-test="section-responsibilities"]').text
+    except NoSuchElementException:
+        responsibilities_section_element = None
+
+    try:
+        requirements_section_element = driver.find_element(By.CSS_SELECTOR,
+                                                   'div[data-test="section-requirements-expected"]').text
+    except NoSuchElementException:
+        requirements_section_element = None
+
+    try:
+        optional_section_element = driver.find_element(By.CSS_SELECTOR,
+                                                   'div[data-test="section-requirements-optional"]').text
+    except NoSuchElementException:
+        optional_section_element = None
 
 
+    print(company_name_element)
+    print(position_name_element)
+    print(job_offer)
+    print(localisation_element)
+    print(contract_type_element)
+    print(work_schedule_element)
+    print(experience_level_element)
+    print(type_of_work_element)
+    print(required_technologies_element)
+    print(optional_technologies_element)
+    print(responsibilities_section_element)
+    print(requirements_section_element)
+    print(optional_section_element)
 
 
-
-
-
-data = pd.DataFrame({"company_name": company_name,
-                     "position_name": position_name,
-                     "link_to_offer": link_to_offer,
-                     "localisation": localisation,
-                     "contact_type": contact_type,
-                     "experience_level": experience_level,
-                     "type_of_work": type_of_work,
-                     "requirements": requirements,
-                     "good_to_have": good_to_have
+data = pd.DataFrame(
+    {
+        "company_name": company_name,
+        "position_name": position_name,
+        "link_to_offer": link_to_offer,
+        "localisation": localisation,
+        "contact_type": contact_type,
+        "work_schedule": work_schedule,
+        "experience_level": experience_level,
+        "type_of_work": type_of_work,
+        "required_technologies": required_technologies,
+        "optional_technologies": optional_technologies,
+        "responsibilities_section": responsibilities_section,
+        "requirements_section": requirements_section,
+        "optional_section": optional_section
                      })
 data.to_csv("job_offers.csv")
 
