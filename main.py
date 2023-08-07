@@ -57,7 +57,7 @@ for job_offer in offer_to_scrape:
     position_name_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                                        'h1[data-test="text-positionName"]')))
 
-    position = position_name_element.text.replace("O firmie", "").strip()
+    position = position_name_element.text
     print(employer)
     print(position)
 
