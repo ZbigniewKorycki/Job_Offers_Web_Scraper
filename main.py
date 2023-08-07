@@ -53,13 +53,13 @@ requirements_section = []
 optional_section = []
 
 
-
-for job_offer in offer_to_scrape:
+for job_offer in links[0:5]:
     driver.get(job_offer)
     time.sleep(5)
     try:
         company_name_element = driver.find_element(By.CSS_SELECTOR,
                                                'h2[data-test="text-employerName"]').text.replace("O firmie", "")
+        company_name_element = company_name_element.replace("About the company", "")
     except NoSuchElementException:
         company_name_element = None
 
@@ -71,7 +71,8 @@ for job_offer in offer_to_scrape:
 
     try:
         localisation_element = driver.find_element(By.CSS_SELECTOR,
-                                                'div[data-test="sections-benefit-workplaces"]').text
+                                                'div[data-test="sections-benefit-workplaces"]').text.replace("Siedziba firmy", "")
+        localisation_element = localisation_element.replace("Company location", "")
     except NoSuchElementException:
         localisation_element = None
 
@@ -101,19 +102,22 @@ for job_offer in offer_to_scrape:
 
     try:
         required_technologies_element = driver.find_element(By.CSS_SELECTOR,
-                                               'div[data-test="section-technologies-expected"]').text
+                                               'div[data-test="section-technologies-expected"]').text.replace("Wymagane", "")
+        required_technologies_element = required_technologies_element.replace("Expected","")
     except NoSuchElementException:
         required_technologies_element = None
 
     try:
         optional_technologies_element = driver.find_element(By.CSS_SELECTOR,
-                                                        'div[data-test="section-technologies-optional"]').text
+                                                        'div[data-test="section-technologies-optional"]').text.replace("Mile widziane", "")
+        optional_technologies_element = optional_technologies_element.replace("Optional", "")
     except NoSuchElementException:
         optional_technologies_element = None
 
     try:
         responsibilities_section_element = driver.find_element(By.CSS_SELECTOR,
-                                               'div[data-test="section-responsibilities"]').text
+                                               'div[data-test="section-responsibilities"]').text.replace("Twój zakres obowiązków", "")
+        responsibilities_section_element = responsibilities_section_element.replace("Your responsibilities", "")
     except NoSuchElementException:
         responsibilities_section_element = None
 
@@ -125,7 +129,8 @@ for job_offer in offer_to_scrape:
 
     try:
         optional_section_element = driver.find_element(By.CSS_SELECTOR,
-                                                   'div[data-test="section-requirements-optional"]').text
+                                                   'div[data-test="section-requirements-optional"]').text.replace("Mile widziane", "")
+        optional_section_element = optional_section_element.replace("Optional", "")
     except NoSuchElementException:
         optional_section_element = None
 
@@ -160,11 +165,10 @@ data = pd.DataFrame(
         "requirements_section": requirements_section,
         "optional_section": optional_section
                      })
-data.to_csv("job_offers.csv")
+data.to_csv("job_offers.csv", index=False)
 
 offers = pd.read_csv("job_offers.csv")
 print(offers)
 
-time.sleep(300)
 driver.quit()
 
