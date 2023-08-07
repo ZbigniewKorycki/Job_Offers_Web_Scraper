@@ -13,7 +13,7 @@ wait_long = WebDriverWait(driver, 10)
 
 driver.get("https://www.pracuj.pl/")
 
-search_phrase = "Hubspot"
+search_phrase = "facebook"
 
 driver.maximize_window()
 
@@ -38,11 +38,14 @@ for page in range(1, max_number_of_page + 1):
         button_element.click()
     except NoSuchElementException:
         print('Only 1 page')
-    multiple_location = wait_long.until(EC.presence_of_all_elements_located((By.XPATH,
-                                                                                 '//div[@data-test-location="multiple"]')))
-    for offer_with_multiple_location in multiple_location:
-        offer_with_multiple_location.click()
-    offers_current_page = wait_long.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-test="link-offer"]')))
+    try:
+        multiple_location = driver.find_elements(By.XPATH, '//div[@data-test-location="multiple"]')
+    except NoSuchElementException:
+        print('Offer with only 1 location')
+    else:
+        for offer_with_multiple_location in multiple_location:
+            offer_with_multiple_location.click()
+    offers_current_page = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-test="link-offer"]')))
     links_from_current_page = [offer.get_attribute("href") for offer in offers_current_page]
     all_offers_links.extend(links_from_current_page)
 
@@ -174,9 +177,9 @@ data = pd.DataFrame(
         "requirements_section": requirements_section,
         "optional_section": optional_section
                      })
-data.to_csv("job_offers.csv", index=False)
+data.to_csv("job_offers_facebook.csv", index=False)
 
-offers = pd.read_csv("job_offers.csv")
+offers = pd.read_csv("job_offers_facebook.csv")
 print(offers)
 
 driver.quit()
