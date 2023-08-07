@@ -13,7 +13,7 @@ wait_long = WebDriverWait(driver, 10)
 
 driver.get("https://www.pracuj.pl/")
 
-search_phrase = "facebook"
+search_phrase = "python"
 
 driver.maximize_window()
 
@@ -177,9 +177,9 @@ data = pd.DataFrame(
         "requirements_section": requirements_section,
         "optional_section": optional_section
                      })
-data.to_csv("job_offers_facebook.csv", index=False)
+data.to_csv("job_offers_python.csv", index=False)
 
-offers = pd.read_csv("job_offers_facebook.csv")
+offers = pd.read_csv("job_offers_python.csv")
 print(offers)
 
 driver.quit()
