@@ -19,7 +19,7 @@ cookie_agreement = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[dat
 cookie_agreement.click()
 
 search_field = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="input-field"]')))
-search_field.send_keys("search_phrase")
+search_field.send_keys(search_phrase)
 
 search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(),"Szukaj")]')))
 search_button.click()
@@ -31,12 +31,13 @@ for offer_with_multiple_localisation in multiple_localisation:
 
 offers_current_page = wait_long.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@data-test="link-offer"]')))
 links = [offer.get_attribute("href") for offer in offers_current_page]
-
 print(links)
 
 
-# element = wait.until(EC.presence_of_element_located((By.XPATH, '//a[@data-test="link-offer"]')))
-# href_value = element.get_attribute("href")
+offer_to_scrape = ["https://www.pracuj.pl/praca/programista-w-dziale-rnd-wroclaw-kazimierza-witalisa-szarskiego-3,oferta,1002772799?s=499ee8a1&searchId=MTY5MTQxNDAwMjU4NC42MDg2"]
+
+for job_offer in offer_to_scrape:
+    driver.get(job_offer)
 
 time.sleep(300)
 driver.quit()
