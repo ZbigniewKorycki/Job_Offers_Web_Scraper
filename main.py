@@ -51,6 +51,21 @@ good_to_have = []
 
 for job_offer in offer_to_scrape:
     driver.get(job_offer)
+    employer_name_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                                       'h2[data-test="text-employerName"]')))
+    employer = employer_name_element.text.replace("O firmie", "")
+    position_name_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                                       'h1[data-test="text-positionName"]')))
+
+    position = position_name_element.text.replace("O firmie", "").strip()
+    print(employer)
+    print(position)
+
+
+
+
+
+
 
 data = pd.DataFrame({"company_name": company_name,
                      "position_name": position_name,
